@@ -5,11 +5,16 @@
     } catch (PDOException $e) {
         echo 'Connection failed: ' . $e->getMessage();
     }
-    $sql = "select * from posts where id < 20;";
-    echo $sql;
+    $cur_date = date("d-M-Y");
+    $sql = "select * from posts where date like '$cur_date%'";
+    #$sql = 'select * from posts where date_format(str_to_date(date, "%d-%M-%Y"), "%Y%m%d")="$cur_date";';
+    //$sql = "select id,src_title,src_link,url,content_hash,title,content,date_format(str_to_date(date, '%d-%M-%Y'), '%Y%m%d') as date_new from posts where date_to_str(date_new)='2016-07-02';";
+    #$sql = "select distinct(src_title) from posts order by src_title;"
+    echo $sql . "</br>";
     $pdo->query('set posts utf8;');
     $result = $pdo->query($sql);
     $rows = $result->fetchAll();
+    echo "<html>";
     foreach ($rows as $row) {
         $id = $row[0];
         $src_title = $row[1];
@@ -18,12 +23,16 @@
         $content = $row[4];
         $content_hash = $row[5];
         $url = $row[6];
-        echo "$id\n";
-        echo "$src_title\n";
-        echo "$src_link\n";
-        echo "$date\n";
-        echo "$content\n";
-        echo "$content_hash\n";
-        echo "$url\n";
+        $title = $row[7];
+        echo "$id</br>";
+        echo "$src_title</br>";
+        echo "$src_link</br>";
+        echo "$date</br>";
+        echo "$content</br>";
+        echo "$content_hash</br>";
+        echo "$url</br>";
+        echo "$title</br>";
     }
+    echo $cur_date;
+    echo "</html>";
 ?>
